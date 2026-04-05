@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鼠标消息 - Qx 消息处理文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+
+    <div class="container">
+
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航栏 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html" class="active"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                <a href="messages.html">消息处理</a> <i class="fas fa-chevron-right"></i>
+                <span>鼠标消息</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-mouse"></i> 鼠标消息</h1>
+                <p class="subtitle">QMsg::MouseMsg 类 - 鼠标事件处理</p>
+            </div>
+
+            <!-- 鼠标按钮说明 -->
+            <section class="mouse-buttons">
+                <h3><i class="fas fa-mouse-pointer"></i> Mouse::Button 枚举</h3>
+                <p style="color: #BEF0FF; margin-bottom: 20px; line-height: 1.6;">
+                    在 Qx 图形库中，鼠标按钮通过 Mouse::Button 枚举表示。这个枚举位于 SFML 图形库中，提供了标准的鼠标按钮标识。
+                </p>
+                <table class="mouse-table">
+                    <tr>
+                        <th>枚举值</th>
+                        <th>描述</th>
+                        <th>对应物理按钮</th>
+                    </tr>
+                    <tr>
+                        <td class="button-value">Mouse::Button::Left</td>
+                        <td>鼠标左键</td>
+                        <td>主点击按钮，用于选择和拖拽</td>
+                    </tr>
+                    <tr>
+                        <td class="button-value">Mouse::Button::Right</td>
+                        <td>鼠标右键</td>
+                        <td>辅助按钮，用于上下文菜单</td>
+                    </tr>
+                    <tr>
+                        <td class="button-value">Mouse::Button::Middle</td>
+                        <td>鼠标中键（滚轮按钮）</td>
+                        <td>按下滚轮按钮，用于特殊操作</td>
+                    </tr>
+                    <tr>
+                        <td class="button-value">Mouse::Button::XButton1</td>
+                        <td>侧键1（前进键）</td>
+                        <td>部分鼠标的附加按钮</td>
+                    </tr>
+                    <tr>
+                        <td class="button-value">Mouse::Button::XButton2</td>
+                        <td>侧键2（后退键）</td>
+                        <td>部分鼠标的附加按钮</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- 位置获取函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-bullseye"></i> 位置获取函数
+                </h2>
+                <div class="function-grid">
+                    <!-- GetMousePosWindow -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetMousePosWindow</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取鼠标在指定窗口上的位置。返回相对于窗口客户区左上角的坐标。坐标以像素为单位，类型为 Vector2i（包含 x 和 y 成员）。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static Vector2i</span>
+                            <span class="func-name">GetMousePosWindow</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">RenderWindow& window</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">window</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用，获取相对于此窗口的鼠标位置</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- GetMousePosScreen -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetMousePosScreen</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取鼠标在屏幕上的绝对位置。返回相对于屏幕左上角的坐标，不考虑任何窗口。坐标以像素为单位，类型为 Vector2i。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static Vector2i</span>
+                            <span class="func-name">GetMousePosScreen</span>
+                            <span class="param-list">
+                                ()
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 状态检测函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-check-circle"></i> 状态检测函数
+                </h2>
+                <div class="function-grid">
+                    <!-- IsMouseDown -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsMouseDown</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 判断当前鼠标按钮是否被按下。检测指定鼠标按钮是否在当前帧被按下（按下事件）。这个函数只在按钮刚刚按下时返回 true，适合检测点击事件。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">IsMouseDown</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">Mouse::Button button</span>,
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用，检测此窗口的鼠标事件</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">button</td>
+                                    <td class="param-type">Mouse::Button</td>
+                                    <td>要检测的鼠标按钮（左键、右键、中键等）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- IsMouseIn -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsMouseIn</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 判断鼠标是否在指定区域内。检测当前鼠标是否位于窗口的指定矩形区域内。常用于实现按钮悬停效果、区域选择等交互功能。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">IsMouseIn</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">int x</span>,
+                                <span class="param">int y</span>,
+                                <span class="param">int w</span>,
+                                <span class="param">int h</span>,
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">int</td>
+                                    <td>矩形区域的左上角坐标（窗口坐标）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w, h</td>
+                                    <td class="param-type">int</td>
+                                    <td>矩形区域的宽度和高度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- IsMousePress -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsMousePress</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 判断鼠标按钮是否处于按下状态。检测指定鼠标按钮是否被持续按下（按住状态）。只要按钮处于按下状态，此函数就返回 true，适合实现拖拽、绘制等持续操作。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">IsMousePress</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">Mouse::Button button</span>,
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用，检测此窗口的鼠标事件</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">button</td>
+                                    <td class="param-type">Mouse::Button</td>
+                                    <td>要检测的鼠标按钮（左键、右键、中键等）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 滚轮和移动函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-arrows-alt-v"></i> 滚轮和移动函数
+                </h2>
+                <div class="function-grid">
+                    <!-- getMouseWheel -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">getMouseWheel</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取鼠标滚轮值。返回鼠标滚轮的当前值，通常是 120 的倍数。正值表示向上滚动，负值表示向下滚动。在每次获取后，滚轮值会被重置。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static int</span>
+                            <span class="func-name">getMouseWheel</span>
+                            <span class="param-list">
+                                ()
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- IsWheel -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsWheel</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 判断鼠标滚轮是否被滚动。检测当前帧是否有滚轮滚动事件发生。这个函数只在滚轮刚刚滚动时返回 true，适合检测单次滚轮事件。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">IsWheel</span>
+                            <span class="param-list">
+                                ()
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- IsMouseMove -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsMouseMove</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 判断鼠标是否移动。检测当前帧鼠标是否发生了移动。可以指定消息ID来检测特定窗口的鼠标移动事件，常用于优化性能（只在鼠标移动时更新相关逻辑）。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">IsMouseMove</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 触摸支持函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-hand-point-up"></i> 触摸支持函数
+                </h2>
+                <div class="function-grid">
+                    <!-- GetTouchNum -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetTouchNum</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取当前触摸点数。返回当前屏幕上正在进行的触摸点数量。支持触摸屏设备，可以用于实现多点触控交互。返回值为当前活动的触摸点数量。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static int</span>
+                            <span class="func-name">GetTouchNum</span>
+                            <span class="param-list">
+                                ()
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 相关函数链接 -->
+            <section class="related-functions">
+                <h3><i class="fas fa-link"></i> 相关函数链接</h3>
+                <div class="related-links">
+                    <a href="messages-basic.html" class="related-link">底层函数模块</a>
+                    <a href="messages-keyboard.html" class="related-link">键盘消息模块</a>
+                    <a href="messages-composite.html" class="related-link">复合函数模块</a>
+                    <a href="messages.html" class="related-link">返回消息处理主页</a>
+                    <a href="window.html" class="related-link">窗口管理</a>
+                    <a href="index.html" class="related-link">返回首页</a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // 简单的交互效果
+        document.querySelectorAll('.function-card').forEach(card => {
+            card.addEventListener('click', function () {
+                this.style.transform = 'translateY(-5px)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === 'messages.html') {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

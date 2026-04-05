@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>底层函数 - Qx 消息处理文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+    <div class="container">
+
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航栏 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html" class="active"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                <a href="messages.html">消息处理</a> <i class="fas fa-chevron-right"></i>
+                <span>底层函数</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-cogs"></i> 底层函数</h1>
+                <p class="subtitle">QMsg 类 - 消息处理的基础功能</p>
+            </div>
+
+            <!-- 函数列表 -->
+            <div class="function-grid">
+                <!-- UpdateMsg -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">UpdateMsg</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 更新窗口消息。这个函数必须在每个主循环开始时调用，用于处理当前窗口的消息队列。它会更新所有消息状态，包括鼠标、键盘和窗口消息。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">UpdateMsg</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">RenderWindow& Dest</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用，需要更新消息的窗口</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- IsClose -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">IsClose</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 判断当前窗口是否接收到关闭消息。当用户点击窗口关闭按钮或系统发送关闭命令时，此函数返回true。通常用于控制主循环的退出条件。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static bool</span>
+                        <span class="func-name">IsClose</span>
+                        <span class="param-list">
+                            ()
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ResetCloseMsg -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">ResetCloseMsg</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 重置关闭消息状态。用于多窗口应用程序，当一个窗口关闭后，需要重置关闭消息状态以便正确处理其他窗口的关闭消息。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">ResetCloseMsg</span>
+                        <span class="param-list">
+                            ()
+                        </span>
+                    </div>
+                </div>
+
+                <!-- SetUpdateId -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">SetUpdateId</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 设置全局默认的消息ID。主要用于多窗口应用程序，可以指定当前活动的消息ID。具有默认值0，表示第一个窗口。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">SetUpdateId</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">int id</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">id</td>
+                                <td class="param-type">int</td>
+                                <td>消息ID，用于标识不同的消息流，默认为0</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SetSleepTime -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">SetSleepTime</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 设置消息睡眠时间。控制消息处理循环的休眠时间，单位毫秒。可以降低CPU使用率，特别是在不需要实时响应的应用中。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">SetSleepTime</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">int time</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">time</td>
+                                <td class="param-type">int</td>
+                                <td>睡眠时间，单位毫秒</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- ClearMsg -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">ClearMsg</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 清理消息缓冲区。清除指定ID的消息缓冲区，释放内存并重置状态。在多窗口应用中，当窗口关闭时可以调用此函数清理对应消息流。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">ClearMsg</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">int id = -1</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">id</td>
+                                <td class="param-type">int</td>
+                                <td>消息ID，-1表示清理所有消息缓冲区</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 相关函数链接 -->
+            <section class="related-functions">
+                <h3><i class="fas fa-link"></i> 相关函数链接</h3>
+                <div class="related-links">
+                    <a href="messages-mouse.html" class="related-link">鼠标消息模块</a>
+                    <a href="messages-keyboard.html" class="related-link">键盘消息模块</a>
+                    <a href="messages-composite.html" class="related-link">复合函数模块</a>
+                    <a href="messages.html" class="related-link">返回消息处理主页</a>
+                    <a href="index.html" class="related-link">返回首页</a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // 简单的交互效果
+        document.querySelectorAll('.function-card').forEach(card => {
+            card.addEventListener('click', function () {
+                this.style.transform = 'translateY(-5px)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === 'messages.html') {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>复合函数 - Qx 消息处理文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+
+    <div class="container">
+
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航栏 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html" class="active"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                <a href="messages.html">消息处理</a> <i class="fas fa-chevron-right"></i>
+                <span>复合函数</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-code-branch"></i> 复合函数</h1>
+                <p>QMsg::Composite 类 - 高级消息处理和辅助功能</p>
+            </div>
+
+            <!-- 概述 -->
+            <section class="enum-section">
+                <h2><i class="fas fa-puzzle-piece"></i> 复合函数概述</h2>
+                <p style="margin: 15px 0; line-height: 1.6; color: #BEF0FF;">
+                    QMsg::Composite 类提供了一系列高级消息处理功能，将常见的消息处理模式封装为简单易用的接口。包括区域滚轮控制、鼠标状态组合检测、键盘输入辅助等功能。这些函数简化了复杂交互逻辑的实现，提高了开发效率。
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="background: var(--light); padding: 20px; border-radius: 8px; border-left: 4px solid var(--secondary);">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-mouse"></i> 鼠标与滚轮组合</h4>
+                        <p style="color: #BEF0FF; font-size: 0.9em; line-height: 1.5;">GetRectWheel 和 IsMouseInRectDown 函数，简化区域交互的实现。</p>
+                    </div>
+                    <div style="background: var(--light); padding: 20px; border-radius: 8px; border-left: 4px solid var(--success);">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-keyboard"></i> 键盘输入辅助</h4>
+                        <p style="color: #BEF0FF; font-size: 0.9em; line-height: 1.5;">GetKeyPressNum 和 GetKeyPressString 函数，方便获取按键状态。</p>
+                    </div>
+                    <div style="background: var(--light); padding: 20px; border-radius: 8px; border-left: 4px solid var(--warning);">
+                        <h4 style="color: var(--primary); margin-bottom: 10px;"><i class="fas fa-tools"></i> 辅助工具函数</h4>
+                        <p style="color: #BEF0FF; font-size: 0.9em; line-height: 1.5;">UpdateWheel 和 UpdatePress 函数，提供滚轮和输入处理辅助。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 鼠标与滚轮组合函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-mouse-pointer"></i> 鼠标与滚轮组合函数
+                </h2>
+                <div class="function-grid">
+                    <!-- GetRectWheel -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetRectWheel</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取一个区域内鼠标的滚轮值。当鼠标在指定矩形区域内滚动时，返回滚轮的当前值（通常是120的倍数）；如果鼠标不在区域内则返回0。正值表示向上滚动，负值表示向下滚动。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static int</span>
+                            <span class="func-name">GetRectWheel</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">int x</span>,
+                                <span class="param">int y</span>,
+                                <span class="param">int w</span>,
+                                <span class="param">int h</span>,
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">int</td>
+                                    <td>矩形区域的左上角坐标（窗口坐标）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w, h</td>
+                                    <td class="param-type">int</td>
+                                    <td>矩形区域的宽度和高度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- IsMouseInRectDown -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsMouseInRectDown</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 判断当前鼠标是否在一个区域内并且处于按下状态。这个函数结合了区域检测和按钮状态检测，通常用于实现按钮点击、区域选择等交互功能。只有当鼠标在指定区域内且指定按钮被按下时返回true。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">IsMouseInRectDown</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">Mouse::Button button</span>,
+                                <span class="param">int x</span>,
+                                <span class="param">int y</span>,
+                                <span class="param">int w</span>,
+                                <span class="param">int h</span>,
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">button</td>
+                                    <td class="param-type">Mouse::Button</td>
+                                    <td>要检测的鼠标按钮（左键、右键、中键等）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">int</td>
+                                    <td>矩形区域的左上角坐标（窗口坐标）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w, h</td>
+                                    <td class="param-type">int</td>
+                                    <td>矩形区域的宽度和高度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 键盘输入辅助函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-keyboard"></i> 键盘输入辅助函数
+                </h2>
+                <div class="function-grid">
+                    <!-- GetKeyPressNum -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetKeyPressNum</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取键盘按下的数字键。检测当前按下的键是否是数字键（0-9），如果是则返回对应的数字值（0-9）；如果不是数字键或者没有按键被按下，返回-1。适用于需要数字输入的场景。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static int</span>
+                            <span class="func-name">GetKeyPressNum</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用，检测此窗口的键盘事件</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- GetKeyPressString -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetKeyPressString</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取键盘按下的键的字符串。返回当前按下的按键对应的字符串表示，如"A"、"Space"、"Escape"等。如果没有按键被按下，则返回空字符串。可以用于获取用户按下的具体按键。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static string</span>
+                            <span class="func-name">GetKeyPressString</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用，检测此窗口的键盘事件</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 辅助工具函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-tools"></i> 辅助工具函数
+                </h2>
+                <div class="function-grid">
+                    <!-- UpdateWheel -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">UpdateWheel</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 更新鼠标滚轮值，此为辅助函数。管理滚轮值的自动衰减和范围限制。可以用于实现平滑的滚轮滚动效果，如列表滚动、缩放控制等。函数会自动将滚轮值限制在指定范围内，并应用速度衰减。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">UpdateWheel</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">int& wheel</span>,
+                                <span class="param">int& tempspeed</span>,
+                                <span class="param">const int speed</span>,
+                                <span class="param">const int max</span>,
+                                <span class="param">const int min</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">wheel</td>
+                                    <td class="param-type">int&</td>
+                                    <td>滚轮值变量引用，会被函数更新</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">tempspeed</td>
+                                    <td class="param-type">int&</td>
+                                    <td>临时速度变量引用，用于存储衰减状态</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">speed</td>
+                                    <td class="param-type">const int</td>
+                                    <td>衰减速度，值越大衰减越快</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">max</td>
+                                    <td class="param-type">const int</td>
+                                    <td>滚轮最大值限制</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">min</td>
+                                    <td class="param-type">const int</td>
+                                    <td>滚轮最小值限制</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-info-circle"></i> 使用说明</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td><strong>工作原理</strong></td>
+                                    <td>通过 speed 参数控制滚轮值的衰减速度，将 wheel 值限制在 [min, max] 范围内</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>调用时机</strong></td>
+                                    <td>应在主循环中每帧调用，实现平滑的滚动效果</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>应用场景</strong></td>
+                                    <td>滚动列表、缩放视图、数值调整器等需要平滑滚动的场景</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- UpdatePress -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">UpdatePress</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 处理键盘输入的字符串，此为辅助函数，主要用于输入框等功能。自动处理键盘输入，包括字符添加、退格删除、回车确认等。支持数字模式，可以限制只输入数字字符。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">UpdatePress</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">string& str</span>,
+                                <span class="param">bool BanAcl = false</span>,
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">str</td>
+                                    <td class="param-type">string&</td>
+                                    <td>要更新的字符串引用，函数会修改此字符串</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">BanAcl</td>
+                                    <td class="param-type">bool</td>
+                                    <td>是否只允许数字输入，true表示只允许数字字符</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-info-circle"></i> 功能特性</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td><strong>字符处理</strong></td>
+                                    <td>自动添加可打印字符到字符串末尾</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>退格功能</strong></td>
+                                    <td>按Backspace键删除最后一个字符</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>回车确认</strong></td>
+                                    <td>按Enter键不修改字符串，可配合其他逻辑处理确认</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>数字限制</strong></td>
+                                    <td>BanAcl为true时，只允许输入数字字符0-9</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 相关函数链接 -->
+            <section class="related-functions">
+                <h3><i class="fas fa-link"></i> 相关函数链接</h3>
+                <div class="related-links">
+                    <a href="messages-basic.html" class="related-link">底层函数模块</a>
+                    <a href="messages-mouse.html" class="related-link">鼠标消息模块</a>
+                    <a href="messages-keyboard.html" class="related-link">键盘消息模块</a>
+                    <a href="messages.html" class="related-link">返回消息处理主页</a>
+                    <a href="window.html" class="related-link">窗口管理</a>
+                    <a href="graphics.html" class="related-link">图形绘制</a>
+                    <a href="index.html" class="related-link">返回首页</a>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+    <script>
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.top-nav-links a').forEach(link => {
+                if (link.getAttribute('href') === 'messages.html') {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

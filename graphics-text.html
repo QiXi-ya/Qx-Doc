@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字显示 API - Qx 文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+    <div class="container">
+
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航栏 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html" class="active"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                <a href="graphics.html">图形绘制</a> <i class="fas fa-chevron-right"></i>
+                <span>文字显示</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-font"></i> 文字显示 API</h1>
+                <p class="subtitle">QText 类 - 字体控制、文本绘制和对齐方式</p>
+            </div>
+
+            <!-- 枚举定义 -->
+            <section class="enum-section">
+                <h2><i class="fas fa-list"></i> FontAdjustType 枚举</h2>
+                <p style="color: #BEF0FF; margin-bottom: 20px; line-height: 1.6;">
+                    FontAdjustType 枚举用于控制文本的对齐方式，包括水平对齐和垂直对齐。通过组合不同的对齐值，可以实现灵活的文本布局。
+                </p>
+                <table class="enum-table">
+                    <tr>
+                        <th>枚举值</th>
+                        <th>描述</th>
+                        <th>应用场景</th>
+                    </tr>
+                    <tr>
+                        <td class="enum-value">ADJUST_LEFT</td>
+                        <td class="enum-desc">左对齐（水平对齐）</td>
+                        <td class="enum-desc">普通段落、列表项、左侧标签</td>
+                    </tr>
+                    <tr>
+                        <td class="enum-value">ADJUST_RIGHT</td>
+                        <td class="enum-desc">右对齐（水平对齐）</td>
+                        <td class="enum-desc">价格、时间、右侧状态栏</td>
+                    </tr>
+                    <tr>
+                        <td class="enum-value">ADJUST_CENTER</td>
+                        <td class="enum-desc">居中对齐（水平和垂直通用）</td>
+                        <td class="enum-desc">标题、按钮文字、对话框内容</td>
+                    </tr>
+                    <tr>
+                        <td class="enum-value">ADJUST_UP</td>
+                        <td class="enum-desc">上对齐（垂直对齐）</td>
+                        <td class="enum-desc">图标标签、顶部状态信息</td>
+                    </tr>
+                    <tr>
+                        <td class="enum-value">ADJUST_DOWN</td>
+                        <td class="enum-desc">下对齐（垂直对齐）</td>
+                        <td class="enum-desc">脚注、底部注释、下标</td>
+                    </tr>
+                </table>
+
+                <!-- 对齐方式可视化示例 -->
+                <div style="margin-top: 30px;">
+                    <h4 style="color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-align-center"></i> 对齐方式示意图
+                    </h4>
+                    <div class="alignment-examples">
+                        <div class="alignment-example">
+                            <h5>水平对齐</h5>
+                            <div class="alignment-visual">
+                                <div class="alignment-box">
+                                    <div class="alignment-point" style="top: 50%; left: 0; transform: translate(-50%, -50%);"></div>
+                                    <div class="alignment-point" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+                                    <div class="alignment-point" style="top: 50%; left: 100%; transform: translate(-50%, -50%);"></div>
+                                </div>
+                                <div class="alignment-label">左对齐 | 居中对齐 | 右对齐</div>
+                            </div>
+                        </div>
+                        <div class="alignment-example">
+                            <h5>垂直对齐</h5>
+                            <div class="alignment-visual">
+                                <div class="alignment-box">
+                                    <div class="alignment-point" style="top: 0; left: 50%; transform: translate(-50%, -50%);"></div>
+                                    <div class="alignment-point" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+                                    <div class="alignment-point" style="top: 100%; left: 50%; transform: translate(-50%, -50%);"></div>
+                                </div>
+                                <div class="alignment-label">上对齐 | 居中对齐 | 下对齐</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QText 类 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-text-height"></i> QText 类 - 文本绘制功能
+                </h2>
+                <div class="function-grid">
+                    <!-- Xyprintf (基本版本) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">Xyprintf</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 在指定位置绘制文本（基本版本）。使用当前设置的字体配置（颜色、大小、字体）在指定坐标绘制文本。这是最简单的文本绘制函数。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">Xyprintf</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">string str</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>文本绘制起始坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">str</td>
+                                    <td class="param-type">string</td>
+                                    <td>要绘制的文本内容</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Xyprintf (带颜色) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">Xyprintf</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 在指定位置绘制带颜色的文本。可以临时指定文本颜色，覆盖当前设置的字体颜色。适用于需要突出显示特定文本的情况。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">Xyprintf</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">string str</span>,
+                                <span class="param">Color color</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>文本绘制起始坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">str</td>
+                                    <td class="param-type">string</td>
+                                    <td>要绘制的文本内容</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">color</td>
+                                    <td class="param-type">Color</td>
+                                    <td>文本颜色，RGBA格式</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Xyprintf (完整版本) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">Xyprintf</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 在指定位置绘制带颜色和大小的文本。可以临时指定文本颜色和大小，覆盖当前设置的字体配置。这是最灵活的文本绘制函数。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">Xyprintf</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">string str</span>,
+                                <span class="param">Color color</span>,
+                                <span class="param">int size</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>文本绘制起始坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">str</td>
+                                    <td class="param-type">string</td>
+                                    <td>要绘制的文本内容</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">color</td>
+                                    <td class="param-type">Color</td>
+                                    <td>文本颜色，RGBA格式</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">size</td>
+                                    <td class="param-type">int</td>
+                                    <td>文本大小（像素高度）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SetFontColor -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">SetFontColor</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置字体颜色。设置全局的文本绘制颜色，这个颜色会影响后续所有使用默认颜色绘制的文本，直到再次修改。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">SetFontColor</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">Color color</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">color</td>
+                                    <td class="param-type">Color</td>
+                                    <td>要设置的字体颜色，RGBA格式</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SetFontSize -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">SetFontSize</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置字体大小。设置全局的文本绘制大小，这个大小会影响后续所有使用默认大小绘制的文本，直到再次修改。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">SetFontSize</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">int size</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">size</td>
+                                    <td class="param-type">int</td>
+                                    <td>要设置的字体大小（像素高度）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SetFontConfig -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">SetFontConfig</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 同时设置字体颜色和大小。一次性设置文本绘制的颜色和大小配置，比分别调用 SetFontColor 和 SetFontSize 更高效。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">SetFontConfig</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">Color color</span>,
+                                <span class="param">int size</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">color</td>
+                                    <td class="param-type">Color</td>
+                                    <td>要设置的字体颜色，RGBA格式</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">size</td>
+                                    <td class="param-type">int</td>
+                                    <td>要设置的字体大小（像素高度）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SetFont (Font对象) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">SetFont</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置字体。使用已加载的 Font 对象设置文本绘制的字体。只设置字体类型，不修改颜色和大小。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">SetFont</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">Font font</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">font</td>
+                                    <td class="param-type">Font</td>
+                                    <td>要设置的字体对象</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SetFont (Font对象带颜色大小) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">SetFont</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置字体、颜色和大小。使用 Font 对象并同时设置颜色和大小，一次性完成字体的完整配置。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">SetFont</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">Font font</span>,
+                                <span class="param">Color color</span>,
+                                <span class="param">int size</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">font</td>
+                                    <td class="param-type">Font</td>
+                                    <td>要设置的字体对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">color</td>
+                                    <td class="param-type">Color</td>
+                                    <td>要设置的字体颜色，RGBA格式</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">size</td>
+                                    <td class="param-type">int</td>
+                                    <td>要设置的字体大小（像素高度）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SetFont (从文件) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">SetFont</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 从文件设置字体。从字体文件（如 .ttf、.otf）加载并设置字体。只设置字体类型，不修改颜色和大小。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">SetFont</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">string filename</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">filename</td>
+                                    <td class="param-type">string</td>
+                                    <td>字体文件路径（相对或绝对路径）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SetFont (从文件带颜色大小) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">SetFont</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 从文件设置字体、颜色和大小。从字体文件加载字体，并同时设置颜色和大小，一次性完成字体的完整配置。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">SetFont</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">string filename</span>,
+                                <span class="param">Color color</span>,
+                                <span class="param">int size</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">filename</td>
+                                    <td class="param-type">string</td>
+                                    <td>字体文件路径（相对或绝对路径）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">color</td>
+                                    <td class="param-type">Color</td>
+                                    <td>要设置的字体颜色，RGBA格式</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">size</td>
+                                    <td class="param-type">int</td>
+                                    <td>要设置的字体大小（像素高度）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SetFontAdjust -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">SetFontAdjust</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置文本对齐方式。控制文本相对于绘制坐标的对齐方式，包括水平对齐和垂直对齐。这个设置会影响后续所有文本的绘制位置。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">SetFontAdjust</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">FontAdjustType horizontal</span>,
+                                <span class="param">FontAdjustType vertical</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">horizontal</td>
+                                    <td class="param-type">FontAdjustType</td>
+                                    <td>水平对齐方式：ADJUST_LEFT、ADJUST_RIGHT、ADJUST_CENTER</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">vertical</td>
+                                    <td class="param-type">FontAdjustType</td>
+                                    <td>垂直对齐方式：ADJUST_UP、ADJUST_DOWN、ADJUST_CENTER</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-lightbulb"></i> 对齐方式示例</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td><strong>ADJUST_LEFT + ADJUST_UP</strong></td>
+                                    <td>文本从坐标点向右下角扩展（默认）</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ADJUST_CENTER + ADJUST_CENTER</strong></td>
+                                    <td>文本在坐标点中心对齐</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ADJUST_RIGHT + ADJUST_DOWN</strong></td>
+                                    <td>文本从坐标点向左上角扩展</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ADJUST_CENTER + ADJUST_UP</strong></td>
+                                    <td>文本在水平居中、垂直上对齐</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 相关函数链接 -->
+            <section class="related-functions">
+                <h3><i class="fas fa-link"></i> 相关函数链接</h3>
+                <div class="related-links">
+                    <a href="graphics-basic.html" class="related-link">颜色与基础图形</a>
+                    <a href="graphics-image.html" class="related-link">图片操作</a>
+                    <a href="graphics.html" class="related-link">返回图形绘制主页</a>
+                    <a href="window.html" class="related-link">窗口管理</a>
+                    <a href="index.html" class="related-link">返回首页</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // 简单的交互效果
+        document.querySelectorAll('.function-card').forEach(card => {
+            card.addEventListener('click', function () {
+                this.style.transform = 'translateY(-5px)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === 'graphics.html') {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

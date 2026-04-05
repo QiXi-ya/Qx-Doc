@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统函数 - Qx API 文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+
+    <div class="container">
+
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航栏 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html" class="active"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                <span>系统函数</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-cogs"></i> 系统函数</h1>
+                <p>QSystem 类 - 系统级功能接口和工具函数</p>
+            </div>
+
+            <!-- 类定义 -->
+            <section class="class-section">
+                <div class="class-header">
+                    <h2>QSystem 类</h2>
+                    <span class="class-badge">静态类</span>
+                </div>
+                <p class="class-description">
+                    QSystem 是一个系统级功能类，提供与操作系统交互的各种功能，包括系统信息获取、窗口样式控制、时间获取、任务栏管理、随机数生成等。这些函数封装了底层的操作系统API调用，简化了系统级操作的实现。
+                </p>
+            </section>
+
+            <!-- 系统信息获取函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-desktop"></i> 系统信息获取函数
+                </h2>
+                <div class="function-grid">
+                    <!-- GetScreenSize -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetScreenSize</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取屏幕的物理尺寸。返回主显示器的屏幕分辨率，以像素为单位。返回值为POINT结构，其中x成员为宽度，y成员为高度。适用于需要根据屏幕大小进行自适应布局的场景。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static POINT</span>
+                            <span class="func-name">GetScreenSize</span>
+                            <span class="param-list">
+                                ()
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td style="width: 120px;"><strong>类型</strong></td>
+                                    <td><strong>说明</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>POINT</td>
+                                    <td>包含屏幕宽度和高度的POINT结构，x为宽度，y为高度（单位：像素）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- IsDarkMode -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsDarkMode</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 判断当前系统是否为深色模式。检测Windows操作系统的主题模式，判断是否启用了深色主题。适用于需要根据系统主题调整界面颜色的应用程序。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">IsDarkMode</span>
+                            <span class="param-list">
+                                ()
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td style="width: 120px;"><strong>类型</strong></td>
+                                    <td><strong>说明</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>bool</td>
+                                    <td>true表示系统处于深色模式，false表示系统处于浅色模式</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- IsWindows11 -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsWindows11</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 判断当前版本是否为Windows 11。检测操作系统版本，判断当前系统是否为Windows 11或更高版本。可用于实现特定于Windows 11的功能，如圆角窗口效果。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">IsWindows11</span>
+                            <span class="param-list">
+                                ()
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td style="width: 120px;"><strong>类型</strong></td>
+                                    <td><strong>说明</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>bool</td>
+                                    <td>true表示当前系统是Windows 11或更高版本，false表示是其他Windows版本</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 窗口样式控制函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-border-style"></i> 窗口样式控制函数
+                </h2>
+                <div class="function-grid">
+                    <!-- RoundWindowDWM -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">RoundWindowDWM</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 圆角化窗口。通过Windows DWM（Desktop Window Manager）API设置窗口的圆角样式，此功能仅在Windows 11中有效。可以创建现代化的圆角窗口界面，提升视觉体验。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">RoundWindowDWM</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">HWND hwnd</span>,
+                                <span class="param">int type</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">hwnd</td>
+                                    <td class="param-type">HWND</td>
+                                    <td>目标窗口的句柄，要应用圆角效果的窗口</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">type</td>
+                                    <td class="param-type">int</td>
+                                    <td>圆角类型：1-圆角，2-小圆角，3-方角（直角）</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-exclamation-triangle"></i> 系统要求</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td style="width: 120px;"><strong>操作系统</strong></td>
+                                    <td>仅支持 Windows 11 或更高版本</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>依赖</strong></td>
+                                    <td>需要系统启用DWM（桌面窗口管理器）功能</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SetWindowBorder -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">SetWindowBorder</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置窗口边框的颜色。修改指定窗口的非客户区边框颜色。可以用于自定义窗口外观，创建与应用程序主题相匹配的窗口边框。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">SetWindowBorder</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">HWND hwnd</span>,
+                                <span class="param">COLORREF color</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">hwnd</td>
+                                    <td class="param-type">HWND</td>
+                                    <td>目标窗口的句柄，要设置边框颜色的窗口</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">color</td>
+                                    <td class="param-type">COLORREF</td>
+                                    <td>目标颜色，Windows颜色引用（通常通过RGB宏创建）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 时间获取函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-clock"></i> 时间获取函数
+                </h2>
+                <div class="function-grid">
+                    <!-- GetTimeNow -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetTimeNow</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取当前时间的字符串。返回当前系统时间的格式化字符串，默认格式为"HH:MM"（24小时制，包含小时和分钟）。适用于需要显示当前时间的场景，如日志记录、状态显示等。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static std::string</span>
+                            <span class="func-name">GetTimeNow</span>
+                            <span class="param-list">
+                                ()
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td style="width: 120px;"><strong>类型</strong></td>
+                                    <td><strong>说明</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>std::string</td>
+                                    <td>当前时间的格式化字符串，默认格式为"HH:MM"（如"14:30"）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- GetTimeNowEx -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetTimeNowEx</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取指定格式的当前时间的字符串。提供高度可配置的时间格式选项，可以控制时间制式（12/24小时制）、分隔符样式（冒号或空格）以及要包含的时间组件（年、月、日、时、分、秒）。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static std::string</span>
+                            <span class="func-name">GetTimeNowEx</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">bool hour12 = false</span>,
+                                <span class="param">bool addcircle = true</span>,
+                                <span class="param">bool year = false</span>,
+                                <span class="param">bool month = false</span>,
+                                <span class="param">bool day = false</span>,
+                                <span class="param">bool hour = true</span>,
+                                <span class="param">bool min = true</span>,
+                                <span class="param">bool sec = true</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">hour12</td>
+                                    <td class="param-type">bool</td>
+                                    <td>时间制式：true为12小时制，false为24小时制（默认）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">addcircle</td>
+                                    <td class="param-type">bool</td>
+                                    <td>分隔符样式：true使用冒号分隔（如"12:00"），false使用空格分隔（如"12 00"）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">year</td>
+                                    <td class="param-type">bool</td>
+                                    <td>是否包含年份，true包含，false不包含（默认）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">month</td>
+                                    <td class="param-type">bool</td>
+                                    <td>是否包含月份，true包含，false不包含（默认）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">day</td>
+                                    <td class="param-type">bool</td>
+                                    <td>是否包含日期，true包含，false不包含（默认）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">hour</td>
+                                    <td class="param-type">bool</td>
+                                    <td>是否包含小时，true包含（默认），false不包含</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">min</td>
+                                    <td class="param-type">bool</td>
+                                    <td>是否包含分钟，true包含（默认），false不包含</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">sec</td>
+                                    <td class="param-type">bool</td>
+                                    <td>是否包含秒钟，true包含（默认），false不包含</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td style="width: 120px;"><strong>类型</strong></td>
+                                    <td><strong>说明</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>std::string</td>
+                                    <td>根据参数格式化的当前时间字符串</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-lightbulb"></i> 使用示例</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td><strong>GetTimeNowEx(false, true, false, false, false, true, true, false)</strong></td>
+                                    <td>"14:30"（24小时制，冒号分隔，只包含时和分）</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>GetTimeNowEx(true, false, true, true, true, true, true, true)</strong></td>
+                                    <td>"2023 12 25 02 30 45 PM"（12小时制，空格分隔，包含所有时间组件）</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>GetTimeNowEx(false, true, true, true, true, false, false, false)</strong></td>
+                                    <td>"2023-12-25"（只包含日期）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 任务栏和随机数函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-sliders-h"></i> 系统控制函数
+                </h2>
+                <div class="function-grid">
+                    <!-- HideTaskBar -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">HideTaskBar</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 隐藏或显示任务栏。控制Windows任务栏的显示状态，可以临时隐藏任务栏以创建全屏应用程序或特殊显示效果。通常用于游戏、演示软件或需要最大化屏幕空间的应用程序。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">HideTaskBar</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">bool hide</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">hide</td>
+                                    <td class="param-type">bool</td>
+                                    <td>隐藏状态：true隐藏任务栏，false显示任务栏</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-exclamation-triangle"></i> 注意事项</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td style="width: 120px;"><strong>权限要求</strong></td>
+                                    <td>需要应用程序具有足够的系统权限</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>恢复</strong></td>
+                                    <td>应用程序退出时应恢复任务栏显示状态</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- GetRand -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetRand</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取指定范围内的随机整数。生成一个在指定最小值和最大值之间的随机整数（包含最小值和最大值）。使用系统级随机数生成器，适用于需要随机数的各种场景，如游戏、模拟、测试等。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static int</span>
+                            <span class="func-name">GetRand</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">int min</span>,
+                                <span class="param">int max</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">min</td>
+                                    <td class="param-type">int</td>
+                                    <td>随机数范围的最小值（包含）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">max</td>
+                                    <td class="param-type">int</td>
+                                    <td>随机数范围的最大值（包含）</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td style="width: 120px;"><strong>类型</strong></td>
+                                    <td><strong>说明</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>int</td>
+                                    <td>范围在[min, max]之间的随机整数（包含边界值）</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-exclamation-triangle"></i> 边界条件</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td><strong>min > max</strong></td>
+                                    <td>函数会自动交换min和max的值，确保正确范围</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>min == max</strong></td>
+                                    <td>总是返回相同的值（min或max）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 相关函数链接 -->
+            <section class="related-functions">
+                <h3><i class="fas fa-link"></i> 相关函数链接</h3>
+                <div class="related-links">
+                    <a href="window.html" class="related-link">窗口管理模块</a>
+                    <a href="graphics.html" class="related-link">图形绘制模块</a>
+                    <a href="messages.html" class="related-link">消息处理模块</a>
+                    <a href="index.html" class="related-link">返回首页</a>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+    <script>
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.top-nav-links a').forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

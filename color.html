@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>颜色处理 - Qx API 文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+    <div class="container">
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html" class="active"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                <span>颜色处理</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-palette"></i> 颜色处理</h1>
+                <p>QColor 类 - 颜色处理和转换功能</p>
+            </div>
+
+            <!-- 类定义 -->
+            <section class="class-section">
+                <div class="class-header">
+                    <h2>QColor 类</h2>
+                    <span class="class-badge">静态类</span>
+                </div>
+                <p class="class-description">
+                    QColor 类提供了丰富的颜色处理和转换功能，包括颜色灰度化、亮度调整、透明度控制、颜色对比和判断等。这些函数简化了颜色的处理逻辑，方便开发者实现各种视觉效果。
+                </p>
+            </section>
+
+            <!-- 函数列表 -->
+            <div class="function-grid">
+                <!-- GrayColor -->
+                <div class="function-card" id="GrayColor">
+                    <div class="function-header">
+                        <div class="function-name">GrayColor</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 灰度化颜色。将指定颜色转换为灰度颜色，可以控制灰度化的程度。灰度值为0时返回原色，灰度值为100时返回完全灰度。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static Color</span>
+                        <span class="func-name">GrayColor</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">const Color& color</span>,
+                            <span class="param">float percent</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">color</td>
+                                <td class="param-type">const Color&</td>
+                                <td>目标颜色，要转换为灰度的颜色</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">percent</td>
+                                <td class="param-type">float</td>
+                                <td>灰度值，范围 [0 - 100]。0为原色，100为完全灰度</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td style="width: 120px;"><strong>类型</strong></td>
+                                <td><strong>说明</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Color</td>
+                                <td>经过灰度处理后的颜色</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DarkColor -->
+                <div class="function-card" id="DarkColor">
+                    <div class="function-header">
+                        <div class="function-name">DarkColor</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 暗化颜色。降低指定颜色的亮度，使其变暗。暗度值为0时返回原色，暗度值为100时返回接近黑色的颜色。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static Color</span>
+                        <span class="func-name">DarkColor</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">const Color& color</span>,
+                            <span class="param">float percent</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">color</td>
+                                <td class="param-type">const Color&</td>
+                                <td>目标颜色，要变暗的颜色</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">percent</td>
+                                <td class="param-type">float</td>
+                                <td>暗度值，范围 [0 - 100]。0为原色，100为完全变暗</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td style="width: 120px;"><strong>类型</strong></td>
+                                <td><strong>说明</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Color</td>
+                                <td>经过暗度处理后的颜色</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- LightColor -->
+                <div class="function-card" id="LightColor">
+                    <div class="function-header">
+                        <div class="function-name">LightColor</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 亮化颜色。提高指定颜色的亮度，使其变亮。亮度值为0时返回原色，亮度值为100时返回接近白色的颜色。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static Color</span>
+                        <span class="func-name">LightColor</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">const Color& color</span>,
+                            <span class="param">float percent</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">color</td>
+                                <td class="param-type">const Color&</td>
+                                <td>目标颜色，要变亮的颜色</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">percent</td>
+                                <td class="param-type">float</td>
+                                <td>亮度值，范围 [0 - 100]。0为原色，100为完全变亮</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td style="width: 120px;"><strong>类型</strong></td>
+                                <td><strong>说明</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Color</td>
+                                <td>经过亮度处理后的颜色</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- AlphaColor -->
+                <div class="function-card" id="AlphaColor">
+                    <div class="function-header">
+                        <div class="function-name">AlphaColor</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 透明化颜色。修改指定颜色的透明度（Alpha通道）。可以创建半透明或完全透明的颜色效果，适用于实现淡入淡出、阴影叠加等视觉效果。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static Color</span>
+                        <span class="func-name">AlphaColor</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">const Color& color</span>,
+                            <span class="param">uint8_t alpha</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">color</td>
+                                <td class="param-type">const Color&</td>
+                                <td>目标颜色，要修改透明度的颜色</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">alpha</td>
+                                <td class="param-type">uint8_t</td>
+                                <td>透明度值，范围 [0 - 255]。0为完全透明，255为完全不透明</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td style="width: 120px;"><strong>类型</strong></td>
+                                <td><strong>说明</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Color</td>
+                                <td>经过透明度处理后的颜色</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- IsDarkColor -->
+                <div class="function-card" id="IsDarkColor">
+                    <div class="function-header">
+                        <div class="function-name">IsDarkColor</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 判断是否为深色。通过计算颜色的亮度值，判断指定颜色是否属于深色系。适用于根据背景色自动调整文字颜色等场景。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static bool</span>
+                        <span class="func-name">IsDarkColor</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">const Color& color</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">color</td>
+                                <td class="param-type">const Color&</td>
+                                <td>要判断的颜色</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td style="width: 120px;"><strong>类型</strong></td>
+                                <td><strong>说明</strong></td>
+                            </tr>
+                            <tr>
+                                <td>bool</td>
+                                <td>true表示是深色，false表示是浅色</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- IsColorSame -->
+                <div class="function-card" id="IsColorSame">
+                    <div class="function-header">
+                        <div class="function-name">IsColorSame</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 判断颜色是否相似或者相同。可以精确对比两个颜色，也可以进行相似性比较。支持控制是否对比Alpha通道，以及相似性容忍度。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static bool</span>
+                        <span class="func-name">IsColorSame</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">const Color& colorA</span>,
+                            <span class="param">const Color& colorB</span>,
+                            <span class="param">bool UseAlpha = false</span>,
+                            <span class="param">bool isExact = false</span>,
+                            <span class="param">int VagueValue = 10</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">colorA</td>
+                                <td class="param-type">const Color&</td>
+                                <td>目标颜色A</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">colorB</td>
+                                <td class="param-type">const Color&</td>
+                                <td>目标对比颜色B</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">UseAlpha</td>
+                                <td class="param-type">bool</td>
+                                <td>是否对比Alpha通道，true表示对比，false表示不对比（默认）</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">isExact</td>
+                                <td class="param-type">bool</td>
+                                <td>是否精确对比，true表示精确对比，false表示相似对比（默认）</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">VagueValue</td>
+                                <td class="param-type">int</td>
+                                <td>相似差度，用于相似对比时的容忍度（默认10）</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-info-circle"></i> 使用模式</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td><strong>精确对比模式</strong></td>
+                                <td>isExact=true，要求RGB（和可选Alpha）完全相等</td>
+                            </tr>
+                            <tr>
+                                <td><strong>相似对比模式</strong></td>
+                                <td>isExact=false，允许颜色在VagueValue范围内相似</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td style="width: 120px;"><strong>类型</strong></td>
+                                <td><strong>说明</strong></td>
+                            </tr>
+                            <tr>
+                                <td>bool</td>
+                                <td>true表示相同，false表示不同</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- AdjustColorBright -->
+                <div class="function-card" id="AdjustColorBright">
+                    <div class="function-header">
+                        <div class="function-name">AdjustColorBright</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 调整颜色亮度。对指定颜色进行亮度调整，可以增加或减少亮度。正值增加亮度，负值减少亮度。适用于动态调整界面元素亮度。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static Color</span>
+                        <span class="func-name">AdjustColorBright</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">const Color& color</span>,
+                            <span class="param">int brightness</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">color</td>
+                                <td class="param-type">const Color&</td>
+                                <td>目标颜色，要调整亮度的颜色</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">brightness</td>
+                                <td class="param-type">int</td>
+                                <td>亮度阈值，正值增加亮度，负值减少亮度</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-info-circle"></i> 返回值</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td style="width: 120px;"><strong>类型</strong></td>
+                                <td><strong>说明</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Color</td>
+                                <td>经过亮度处理后的颜色</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 相关函数链接 -->
+            <section class="related-functions">
+                <h3><i class="fas fa-link"></i> 相关函数链接</h3>
+                <div class="related-links">
+                    <a href="graphics.html" class="related-link">图形绘制模块</a>
+                    <a href="graphics-basic.html" class="related-link">图形基础函数</a>
+                    <a href="graphics-image.html" class="related-link">图片处理函数</a>
+                    <a href="graphics-text.html" class="related-link">文字处理函数</a>
+                    <a href="index.html" class="related-link">返回首页</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.top-nav-links a').forEach(link => {
+                if (link.getAttribute('href') === 'color.html') {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

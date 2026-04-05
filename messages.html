@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消息处理 API - Qx 文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+    <div class="container">
+
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航栏 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html" class="active"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                <span>消息处理</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-comments"></i> 消息处理 API</h1>
+                <p class="subtitle">QMsg 类 - 鼠标、键盘和窗口消息处理</p>
+            </div>
+
+            <!-- 类定义 -->
+            <section class="category-card">
+                <div class="class-header">
+                    <h2>QMsg 类</h2>
+                    <span class="class-badge">静态类</span>
+                </div>
+                <p class="class-description">
+                    QMsg 是一个功能完整的消息处理类，专门用于处理窗口消息、鼠标输入和键盘输入。该类采用多子类结构，将不同功能模块化，便于使用和维护。支持多窗口消息管理、消息ID系统和高级输入处理。包含基础消息更新功能、鼠标消息处理、键盘消息处理和复合功能处理。
+                </p>
+            </section>
+
+            <!-- 功能分类 -->
+            <div class="category-grid">
+                <!-- 底层函数 -->
+                <a href="messages-basic.html" class="category-card">
+                    <div class="card-icon" style="background: #3498db;">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h2><i class="fas fa-cogs"></i> 底层函数</h2>
+                    <p>提供消息处理的基础功能，包括消息更新、窗口关闭判断、消息ID管理和缓冲区清理。这些函数是消息系统运行的基础。</p>
+                    <div class="btn">查看详细文档</div>
+                </a>
+
+                <!-- 鼠标消息 -->
+                <a href="messages-mouse.html" class="category-card">
+                    <div class="card-icon" style="background: #e74c3c;">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h2><i class="fas fa-mouse"></i> 鼠标消息</h2>
+                    <p>提供鼠标事件处理功能，包括鼠标位置获取、按钮状态检测、滚轮控制和区域判断。支持多窗口和多鼠标按钮。</p>
+                    <div class="btn">查看详细文档</div>
+                </a>
+
+                <!-- 键盘消息 -->
+                <a href="messages-keyboard.html" class="category-card">
+                    <div class="card-icon" style="background: #2ecc71;">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h2><i class="fas fa-keyboard"></i> 键盘消息</h2>
+                    <p>提供键盘事件处理功能，包括按键状态检测、键盘输入捕获、虚拟键码处理和按键列表获取。支持多窗口和复杂输入。</p>
+                    <div class="btn">查看详细文档</div>
+                </a>
+
+                <!-- 复合函数 -->
+                <a href="messages-composite.html" class="category-card">
+                    <div class="card-icon" style="background: #f39c12;">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <h2><i class="fas fa-code-branch"></i> 复合函数</h2>
+                    <p>提供高级消息处理功能，包括区域滚轮控制、组合按键检测、输入框处理和辅助工具函数。简化复杂交互逻辑的实现。</p>
+                    <div class="btn">查看详细文档</div>
+                </a>
+            </div>
+
+
+
+            <!-- 快速导航 -->
+            <section class="quick-nav">
+                <h3><i class="fas fa-link"></i> 快速导航</h3>
+                <div class="nav-links-grid">
+                    <a href="messages-basic.html" class="nav-link-item"><i class="fas fa-cogs"></i> 底层函数</a>
+                    <a href="messages-mouse.html" class="nav-link-item"><i class="fas fa-mouse"></i> 鼠标消息</a>
+                    <a href="messages-keyboard.html" class="nav-link-item"><i class="fas fa-keyboard"></i> 键盘消息</a>
+                    <a href="messages-composite.html" class="nav-link-item"><i class="fas fa-code-branch"></i> 复合函数</a>
+                    <a href="window.html" class="nav-link-item"><i class="fas fa-window-maximize"></i> 窗口管理</a>
+                    <a href="graphics.html" class="nav-link-item"><i class="fas fa-paint-brush"></i> 图形绘制</a>
+                    <a href="index.html" class="nav-link-item"><i class="fas fa-home"></i> 返回首页</a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // 简单的交互效果
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = '';
+            });
+        });
+
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

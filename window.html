@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>窗口管理 API - Qx 文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+    <div class="container">
+
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航栏 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html" class="active"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                <span>窗口管理</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-window-maximize"></i> 窗口管理 API</h1>
+                <p class="subtitle">QWindow 静态类 - 窗口创建、配置和管理</p>
+            </div>
+
+            <!-- 类定义 -->
+            <section class="class-section">
+                <div class="class-header">
+                    <h2>QWindow 类</h2>
+                    <span class="class-badge">静态类</span>
+                </div>
+                <p class="class-description">
+                    QWindow 是一个完全静态的类，提供了窗口创建和管理的所有方法。所有方法都是静态的，无需创建类实例即可使用。该类封装了底层的窗口操作，提供了简单易用的 API 接口。包含窗口创建、配置、位置控制、大小设置、标题设置、图标设置等功能。
+                </p>
+            </section>
+
+            <!-- 函数列表 -->
+            <div class="function-grid">
+                <!-- CreateGraphWindow -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">CreateGraphWindow</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 创建并初始化一个新的图形窗口。这是窗口系统的核心函数，可以自定义窗口的位置、大小、标题、样式和状态。如果坐标或大小参数为-1，将使用系统默认值。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">CreateGraphWindow</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">RenderWindow& Dest</span>,
+                            <span class="param">int x = -1</span>,
+                            <span class="param">int y = -1</span>,
+                            <span class="param">int w = -1</span>,
+                            <span class="param">int h = -1</span>,
+                            <span class="param">string title = "QGraphWindow"</span>,
+                            <span class="param">uint32_t style = 7U</span>,
+                            <span class="param">sf::State state = sf::State::Windowed</span>,
+                            <span class="param">const sf::ContextSettings& setting = {}</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用，创建的窗口对象将存储在此引用中</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">x, y</td>
+                                <td class="param-type">int</td>
+                                <td>窗口坐标，小于0时使用系统默认位置</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">w, h</td>
+                                <td class="param-type">int</td>
+                                <td>窗口宽高，小于0时使用系统默认大小</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">title</td>
+                                <td class="param-type">string</td>
+                                <td>窗口标题，空值时使用默认标题</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">style</td>
+                                <td class="param-type">uint32_t</td>
+                                <td>窗口样式标志位组合</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">state</td>
+                                <td class="param-type">sf::State</td>
+                                <td>窗口状态（全屏、窗口化、最大化等）</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">setting</td>
+                                <td class="param-type">ContextSettings&</td>
+                                <td>OpenGL上下文设置，用于3D渲染</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- DelayFps -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">DelayFps</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 控制窗口的帧率刷新，用于实现稳定的帧率控制。这个函数在游戏循环中非常重要，可以防止程序占用过多CPU资源，同时保持平滑的动画效果。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">DelayFps</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">int fps</span>,
+                            <span class="param">RenderWindow& Dest</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">fps</td>
+                                <td class="param-type">int</td>
+                                <td>期望的帧率上限，如60、120等</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- IsFocus -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">IsFocus</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 判断当前窗口是否为焦点窗口。焦点窗口是接收用户输入（键盘、鼠标）的窗口。这个函数通常用于只在窗口获得焦点时处理用户输入，优化程序性能。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static bool</span>
+                        <span class="func-name">IsFocus</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">RenderWindow& Dest</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SetTitle -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">SetTitle</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 设置窗口标题。可以动态修改窗口标题栏显示的文本，适用于需要更新状态信息的应用程序，如游戏得分、文档名称等。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">SetTitle</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">RenderWindow& Dest</span>,
+                            <span class="param">const String& title</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">title</td>
+                                <td class="param-type">const String&</td>
+                                <td>新的窗口标题</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SetIcon -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">SetIcon</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 从文件中设置窗口图标。窗口图标显示在标题栏、任务栏和窗口管理器中。支持常见的图片格式，如PNG、JPG、BMP等。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">SetIcon</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">RenderWindow& Dest</span>,
+                            <span class="param">const String& path</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">path</td>
+                                <td class="param-type">const String&</td>
+                                <td>图标文件路径，相对路径或绝对路径</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SetMouseCursorVisible -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">SetMouseCursorVisible</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 设置鼠标在窗口上是否可见。在游戏或全屏应用中，通常需要隐藏鼠标光标，防止干扰用户视线。在编辑器中，则需要显示鼠标光标。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">SetMouseCursorVisible</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">RenderWindow& Dest</span>,
+                            <span class="param">bool visible</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">visible</td>
+                                <td class="param-type">bool</td>
+                                <td>true显示鼠标，false隐藏鼠标</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- MoveWindow -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">MoveWindow</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 移动窗口到屏幕的指定位置。可以用于实现窗口拖拽、自动布局或屏幕位置恢复功能。坐标是相对于屏幕左上角的绝对坐标。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">MoveWindow</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">RenderWindow& Dest</span>,
+                            <span class="param">int x</span>,
+                            <span class="param">int y</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">x</td>
+                                <td class="param-type">int</td>
+                                <td>新的X坐标（屏幕坐标）</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">y</td>
+                                <td class="param-type">int</td>
+                                <td>新的Y坐标（屏幕坐标）</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SetWindowSize -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">SetWindowSize</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 设置窗口大小。可以动态调整窗口的宽度和高度，适用于响应式布局、窗口缩放或全屏切换功能。注意：设置的大小不包括窗口边框。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">SetWindowSize</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">RenderWindow& Dest</span>,
+                            <span class="param">int width</span>,
+                            <span class="param">int height</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">width</td>
+                                <td class="param-type">int</td>
+                                <td>新的窗口宽度（像素）</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">height</td>
+                                <td class="param-type">int</td>
+                                <td>新的窗口高度（像素）</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- GetWindowSize -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">GetWindowSize</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 获取窗口的当前大小。返回包含宽度和高度的Vector2i结构。这个函数常用于自适应布局、计算纵横比或根据窗口大小调整UI元素。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static Vector2i</span>
+                        <span class="func-name">GetWindowSize</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">RenderWindow& Dest</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- GetWindowPos -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">GetWindowPos</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 获取窗口在屏幕上的当前位置。返回包含X和Y坐标的Vector2i结构。可以用于保存窗口位置配置，实现窗口位置记忆功能。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static Vector2i</span>
+                        <span class="func-name">GetWindowPos</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">RenderWindow& Dest</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SetWindowMinSize -->
+                <div class="function-card">
+                    <div class="function-header">
+                        <div class="function-name">SetWindowMinSize</div>
+                        <span class="function-tag">静态</span>
+                    </div>
+                    <div class="function-introduction">
+                        <i class="fas fa-info-circle"></i> 设置窗口的最小大小限制。防止用户将窗口缩放到过小，影响UI元素的正常显示。这个限制只影响用户拖拽调整窗口大小的操作，不限制程序代码设置更小的窗口大小。
+                    </div>
+                    <div class="function-signature">
+                        <span class="return-type">static void</span>
+                        <span class="func-name">SetWindowMinSize</span>
+                        <span class="param-list">
+                            (
+                            <span class="param">RenderWindow& Dest</span>,
+                            <span class="param">int width</span>,
+                            <span class="param">int height</span>
+                            )
+                        </span>
+                    </div>
+                    <div class="params-section">
+                        <h4><i class="fas fa-list"></i> 参数</h4>
+                        <table class="params-table">
+                            <tr>
+                                <td class="param-name">Dest</td>
+                                <td class="param-type">RenderWindow&</td>
+                                <td>目标窗口引用</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">width</td>
+                                <td class="param-type">int</td>
+                                <td>最小宽度限制（像素）</td>
+                            </tr>
+                            <tr>
+                                <td class="param-name">height</td>
+                                <td class="param-type">int</td>
+                                <td>最小高度限制（像素）</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 相关函数链接 -->
+            <section class="related-functions">
+                <h3><i class="fas fa-link"></i> 相关函数链接</h3>
+                <div class="related-links">
+                    <a href="graphics.html" class="related-link">图形绘制模块 (QGraph)</a>
+                    <a href="messages.html" class="related-link">消息处理模块 (QMsg)</a>
+                    <a href="system.html" class="related-link">系统函数模块 (QSystem)</a>
+                    <a href="index.html" class="related-link">返回首页</a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // 简单的交互效果
+        document.querySelectorAll('.function-card').forEach(card => {
+            card.addEventListener('click', function () {
+                this.style.transform = 'translateY(-5px)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片操作 API - Qx 文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+    <div class="container">
+
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航栏 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html" class="active"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                <a href="graphics.html">图形绘制</a> <i class="fas fa-chevron-right"></i>
+                <span>图片操作</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-image"></i> 图片操作 API</h1>
+                <p class="subtitle">QImage 和 QImageEx 类 - 图片加载、处理和显示</p>
+            </div>
+
+            <!-- IMAGE 结构定义 -->
+            <section class="struct-section">
+                <h2><i class="fas fa-cube"></i> IMAGE 结构体</h2>
+                <div class="struct-definition">
+                    <span style="color: #2ecc71;">struct</span> IMAGE {<br>
+                    &nbsp;&nbsp;<span class="struct-type">Texture</span> <span class="struct-field">texture</span>;<br>
+                    &nbsp;&nbsp;<span class="struct-type">Color</span> <span class="struct-field">color</span>;<br>
+                    };
+                </div>
+                <p style="color: #BEF0FF; line-height: 1.6;">
+                    IMAGE 结构体是图片操作的核心数据结构，包含两个成员：
+                </p>
+                <ul style="color: #BEF0FF; line-height: 1.6; padding-left: 20px; margin-top: 10px;">
+                    <li><strong>texture</strong>: 存储图片的纹理数据，用于实际的渲染和显示</li>
+                    <li><strong>color</strong>: 图片的颜色滤镜，可以叠加颜色效果到图片上</li>
+                </ul>
+            </section>
+
+            <!-- QImage 类 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-images"></i> QImage 类 - 基础图片操作
+                </h2>
+                <div class="function-grid">
+                    <!-- newimage (从文件) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">newimage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 从文件中创建图片对象。支持多种图片格式（PNG、JPG、BMP等），可以指定从图片中截取特定区域。如果加载失败返回false。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">newimage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">const string& filename</span>,
+                                <span class="param">int x = 0</span>,
+                                <span class="param">int y = 0</span>,
+                                <span class="param">int w = 0</span>,
+                                <span class="param">int h = 0</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>输出的图片对象引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">filename</td>
+                                    <td class="param-type">const string&</td>
+                                    <td>图片文件路径（相对或绝对路径）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">int</td>
+                                    <td>截取区域的左上角坐标，默认为0</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w, h</td>
+                                    <td class="param-type">int</td>
+                                    <td>截取区域的宽高，0表示使用整个图片</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- newimage (从窗口) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">newimage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 从窗口中捕获图片。将指定窗口区域的当前内容捕获为图片对象，可以用于截图功能或动态纹理生成。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">newimage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">RenderWindow& window</span>,
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">int x</span>,
+                                <span class="param">int y</span>,
+                                <span class="param">int w</span>,
+                                <span class="param">int h</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">window</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>源窗口引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>输出的图片对象引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">int</td>
+                                    <td>捕获区域的左上角坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w, h</td>
+                                    <td class="param-type">int</td>
+                                    <td>捕获区域的宽高</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- newimage (从另一图片) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">newimage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 从另一图片创建新图片。可以从源图片中截取特定区域创建新图片，目标图片不保留原有的颜色滤镜，但源图片的颜色滤镜会应用到新图片上。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">newimage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& dest</span>,
+                                <span class="param">IMAGE& src</span>,
+                                <span class="param">int x = -1</span>,
+                                <span class="param">int y = -1</span>,
+                                <span class="param">int w = -1</span>,
+                                <span class="param">int h = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">dest</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">src</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>源图片对象引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">int</td>
+                                    <td>截取区域的左上角坐标，-1表示从0开始</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w, h</td>
+                                    <td class="param-type">int</td>
+                                    <td>截取区域的宽高，-1表示使用整个图片</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Cutimage -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">Cutimage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 裁剪图片。修改现有图片对象，只保留指定矩形区域的内容。原图片的其他部分将被丢弃，图片大小会变为裁剪后的大小。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">Cutimage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">int x</span>,
+                                <span class="param">int y</span>,
+                                <span class="param">int w</span>,
+                                <span class="param">int h</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>要裁剪的图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">int</td>
+                                    <td>裁剪区域的左上角坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w, h</td>
+                                    <td class="param-type">int</td>
+                                    <td>裁剪区域的宽高</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- IsSmoothImage -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsSmoothImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置图片是否启用平滑处理。平滑处理（抗锯齿）可以改善图片在缩放时的视觉效果，但会略微增加渲染开销。默认启用。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">IsSmoothImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">bool smooth</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">smooth</td>
+                                    <td class="param-type">bool</td>
+                                    <td>true启用平滑处理，false禁用平滑处理</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- IsRepeatedImage -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsRepeatedImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置图片是否平铺。当设置为平铺时，如果绘制区域大于图片本身，图片会自动重复以填充整个区域。默认不平铺。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">IsRepeatedImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">bool repeated</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">repeated</td>
+                                    <td class="param-type">bool</td>
+                                    <td>true启用平铺，false禁用平铺</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SetImageColor -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">SetImageColor</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 应用图片颜色滤镜。为图片设置一个颜色滤镜，该滤镜会在图片渲染时与图片的每个像素颜色相乘。可以用于实现色调调整、颜色叠加等效果。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">SetImageColor</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">Color color</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">color</td>
+                                    <td class="param-type">Color</td>
+                                    <td>要应用的颜色滤镜，RGBA格式</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- UpdateImage -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">UpdateImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 更新目标图片。将源图片的内容更新到目标图片，目标图片不保留原有的颜色滤镜，但源图片的颜色滤镜会应用到目标图片上。用于图片内容的动态更新。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">UpdateImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">IMAGE& dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>源图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">dest</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- AlphaImage -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">AlphaImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置图片的透明度。通过调整图片的整体透明度（Alpha通道）实现半透明效果。alpha为0时完全透明，alpha为255时完全不透明。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">AlphaImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">int alpha</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">alpha</td>
+                                    <td class="param-type">int</td>
+                                    <td>不透明度值，0-255</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- PutImage (到窗口) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">PutImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制图片到窗口。在指定位置绘制图片，可以指定绘制中心点坐标。这是最基本的图片绘制函数。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">PutImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">float CenterX = 0.0</span>,
+                                <span class="param">float CenterY = 0.0</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>要绘制的图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>绘制位置坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">CenterX, CenterY</td>
+                                    <td class="param-type">float</td>
+                                    <td>绘制中心点偏移，用于对齐和旋转参考点</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- PutImage (到图片) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">PutImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制图片到另一图片。在目标图片的指定位置绘制源图片，目标图片不保留原有的颜色滤镜，但源图片的颜色滤镜会应用到目标图片上。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">PutImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& dest</span>,
+                                <span class="param">IMAGE& src</span>,
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float CenterX = 0.0</span>,
+                                <span class="param">float CenterY = 0.0</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">dest</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">src</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>源图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>绘制位置坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">CenterX, CenterY</td>
+                                    <td class="param-type">float</td>
+                                    <td>绘制中心点偏移</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- PutRoteImage (到窗口) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">PutRoteImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制旋转图片到窗口。在指定位置绘制旋转后的图片，可以指定旋转角度和中心点。角度单位为度。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">PutRoteImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float angle</span>,
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">float CenterX = 0.0</span>,
+                                <span class="param">float CenterY = 0.0</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>要绘制的图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>绘制位置坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">angle</td>
+                                    <td class="param-type">float</td>
+                                    <td>旋转角度（度）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">CenterX, CenterY</td>
+                                    <td class="param-type">float</td>
+                                    <td>旋转中心点偏移</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- PutScaleImage (到窗口) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">PutScaleImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制缩放图片到窗口。在指定位置绘制缩放后的图片，可以分别指定宽度和高度的缩放比例。1.0表示原始大小。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">PutScaleImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float scaleX</span>,
+                                <span class="param">float scaleY</span>,
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">float CenterX = 0.0</span>,
+                                <span class="param">float CenterY = 0.0</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>要绘制的图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>绘制位置坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">scaleX, scaleY</td>
+                                    <td class="param-type">float</td>
+                                    <td>宽度和高度的缩放比例</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">CenterX, CenterY</td>
+                                    <td class="param-type">float</td>
+                                    <td>缩放中心点偏移</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- PutRoteScaleImage (到窗口) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">PutRoteScaleImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制旋转缩放图片到窗口。在指定位置绘制同时经过旋转和缩放变换的图片。这是最灵活的图片绘制函数，支持完整的2D变换。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">PutRoteScaleImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float angle</span>,
+                                <span class="param">float scaleX</span>,
+                                <span class="param">float scaleY</span>,
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">float CenterX = 0.0</span>,
+                                <span class="param">float CenterY = 0.0</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>要绘制的图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>绘制位置坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">angle</td>
+                                    <td class="param-type">float</td>
+                                    <td>旋转角度（度）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">scaleX, scaleY</td>
+                                    <td class="param-type">float</td>
+                                    <td>宽度和高度的缩放比例</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">CenterX, CenterY</td>
+                                    <td class="param-type">float</td>
+                                    <td>变换中心点偏移</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- GetWidth -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetWidth</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取图片宽度。返回图片的像素宽度，可以用于布局计算或自适应界面设计。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static int</span>
+                            <span class="func-name">GetWidth</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- GetHeight -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetHeight</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取图片高度。返回图片的像素高度，与GetWidth配合使用可以获取图片的完整尺寸信息。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static int</span>
+                            <span class="func-name">GetHeight</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ClearImage -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">ClearImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 清理图片为纯色背景。将整个图片设置为指定的纯色，可以用于清空画布或创建纯色背景图片。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">ClearImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& image</span>,
+                                <span class="param">Color backcolor</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">image</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">backcolor</td>
+                                    <td class="param-type">Color</td>
+                                    <td>背景颜色，RGBA格式</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QImageEx 类 -->
+            <section style="margin-top: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-magic"></i> QImageEx 类 - 高级图片特效
+                </h2>
+                <div class="function-grid">
+                    <!-- ZoomImage (按尺寸) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">ZoomImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 缩放图片到指定尺寸。将图片缩放到指定的宽度和高度，会改变图片的实际像素尺寸。常用于图片的预缩放处理。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">ZoomImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">int scaleW</span>,
+                                <span class="param">int scaleH</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象（会被修改）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">scaleW</td>
+                                    <td class="param-type">int</td>
+                                    <td>目标宽度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">scaleH</td>
+                                    <td class="param-type">int</td>
+                                    <td>目标高度（像素）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ZoomImage (按比例) -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">ZoomImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 按比例缩放图片。使用缩放因子来调整图片大小，1.0表示原始大小，0.5表示缩小一半，2.0表示放大一倍。支持非均匀缩放。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">ZoomImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float scaleW</span>,
+                                <span class="param">float scaleH</span>,
+                                <span class="param">IMAGE& img</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">scaleW</td>
+                                    <td class="param-type">float</td>
+                                    <td>宽度缩放比例</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">scaleH</td>
+                                    <td class="param-type">float</td>
+                                    <td>高度缩放比例</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象（会被修改）</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- BlurImage -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">BlurImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 高斯模糊图片。对图片应用高斯模糊效果，可以创建柔和的阴影、景深效果或视觉焦点。sigma参数控制模糊强度，必须大于0。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">BlurImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">double sigma</span>,
+                                <span class="param">int downscale</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象（会被修改）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">sigma</td>
+                                    <td class="param-type">double</td>
+                                    <td>模糊程度，值越大越模糊，必须>0</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">downscale</td>
+                                    <td class="param-type">int</td>
+                                    <td>降采样倍数，提高性能但会降低质量</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- FogImage -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">FogImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 雾化图片效果。创建类似朦胧的效果，通过控制透明度和模糊程度来模拟朦胧感。alpha为0时完全无效，255为完全模糊。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">FogImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">double sigma</span>,
+                                <span class="param">int downscale</span>,
+                                <span class="param">int alpha</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象（会被修改）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">sigma</td>
+                                    <td class="param-type">double</td>
+                                    <td>雾化的高斯模糊程度</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">downscale</td>
+                                    <td class="param-type">int</td>
+                                    <td>降采样倍数，提高性能但会降低质量</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">alpha</td>
+                                    <td class="param-type">int</td>
+                                    <td>不透明度，0-255，0为完全透明，255为完全不透明</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- FeatherImage -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">FeatherImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 羽化图片边缘。创建渐变的边缘效果，使图片边缘逐渐变得透明。支持三种羽化模式：平滑羽化、高斯羽化、余弦羽化。默认使用平滑羽化。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">FeatherImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">float strength</span>,
+                                <span class="param">int downscale</span>,
+                                <span class="param">int mode = 1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象（会被修改）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">strength</td>
+                                    <td class="param-type">float</td>
+                                    <td>羽化强度，值越大边缘越模糊</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">downscale</td>
+                                    <td class="param-type">int</td>
+                                    <td>降采样倍数，提高性能但会降低质量</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">mode</td>
+                                    <td class="param-type">int</td>
+                                    <td>羽化模式：1-平滑羽化，2-高斯羽化，3-余弦羽化</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- BlackWImage -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">BlackWImage</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 黑白化图片。将彩色图片转换为黑白图片，可以控制黑白化的强度。适用于创建复古效果、强调轮廓或降低视觉复杂度。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">BlackWImage</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">IMAGE& img</span>,
+                                <span class="param">float strenth</span>,
+                                <span class="param">int downscale</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">img</td>
+                                    <td class="param-type">IMAGE&</td>
+                                    <td>目标图片对象（会被修改）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">strenth</td>
+                                    <td class="param-type">float</td>
+                                    <td>黑白化强度，0-100，100为完全黑白</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">downscale</td>
+                                    <td class="param-type">int</td>
+                                    <td>降采样倍数，提高性能但会降低质量</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 相关函数链接 -->
+            <section class="related-functions">
+                <h3><i class="fas fa-link"></i> 相关函数链接</h3>
+                <div class="related-links">
+                    <a href="graphics-basic.html" class="related-link">颜色与基础图形</a>
+                    <a href="graphics-text.html" class="related-link">文字显示</a>
+                    <a href="graphics.html" class="related-link">返回图形绘制主页</a>
+                    <a href="index.html" class="related-link">返回首页</a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // 简单的交互效果
+        document.querySelectorAll('.function-card').forEach(card => {
+            card.addEventListener('click', function () {
+                this.style.transform = 'translateY(-5px)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === 'graphics.html') {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

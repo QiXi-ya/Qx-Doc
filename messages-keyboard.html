@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>键盘消息 - Qx 消息处理文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+    <div class="container">
+
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航栏 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html" class="active"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                <a href="messages.html">消息处理</a> <i class="fas fa-chevron-right"></i>
+                <span>键盘消息</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-keyboard"></i> 键盘消息</h1>
+                <p>QMsg::KeyMsg 类 - 键盘事件处理和按键状态检测</p>
+            </div>
+
+            <!-- 键盘常量说明 -->
+            <section class="enum-section">
+                <h2><i class="fas fa-key"></i> Keyboard::Key 枚举</h2>
+                <p style="margin: 15px 0; line-height: 1.6;">在 Qx 图形库中，键盘按键通过 Keyboard::Key 枚举表示。这个枚举位于 SFML 图形库中，提供了标准的键盘按键标识。以下是常用的按键枚举值：</p>
+
+                <div style="overflow-x: auto; margin-top: 20px;">
+                    <table class="enum-table">
+                        <tr>
+                            <th>类别</th>
+                            <th>按键枚举</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td>字母键</td>
+                            <td class="enum-value">Keyboard::Key::A 到 Keyboard::Key::Z</td>
+                            <td>26个字母按键</td>
+                        </tr>
+                        <tr>
+                            <td>数字键</td>
+                            <td class="enum-value">Keyboard::Key::Num0 到 Keyboard::Key::Num9</td>
+                            <td>主键盘区数字键 0-9</td>
+                        </tr>
+                        <tr>
+                            <td>功能键</td>
+                            <td class="enum-value">Keyboard::Key::F1 到 Keyboard::Key::F12</td>
+                            <td>功能键 F1-F12</td>
+                        </tr>
+                        <tr>
+                            <td>控制键</td>
+                            <td class="enum-value">Keyboard::Key::Escape, Keyboard::Key::Tab, Keyboard::Key::Enter<br>Keyboard::Key::Space, Keyboard::Key::BackSpace, Keyboard::Key::Delete</td>
+                            <td>常用控制键</td>
+                        </tr>
+                        <tr>
+                            <td>修饰键</td>
+                            <td class="enum-value">Keyboard::Key::LShift, Keyboard::Key::RShift<br>Keyboard::Key::LControl, Keyboard::Key::RControl<br>Keyboard::Key::LAlt, Keyboard::Key::RAlt</td>
+                            <td>Shift、Ctrl、Alt 修饰键（左右区分）</td>
+                        </tr>
+                        <tr>
+                            <td>方向键</td>
+                            <td class="enum-value">Keyboard::Key::Left, Keyboard::Key::Right<br>Keyboard::Key::Up, Keyboard::Key::Down</td>
+                            <td>方向键</td>
+                        </tr>
+                        <tr>
+                            <td>数字小键盘</td>
+                            <td class="enum-value">Keyboard::Key::Numpad0 到 Keyboard::Key::Numpad9<br>Keyboard::Key::Add, Keyboard::Key::Subtract, Keyboard::Key::Multiply, Keyboard::Key::Divide</td>
+                            <td>数字小键盘按键</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 基本按键检测函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-keyboard"></i> 基本按键检测函数
+                </h2>
+                <div class="function-grid">
+                    <!-- IsKeyDown -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsKeyDown</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 检测按键是否被按下。判断指定按键在当前帧是否被按下（按下事件）。这个函数只在按键刚刚按下时返回 true，适合检测单次按键事件。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">IsKeyDown</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">Keyboard::Key key</span>,
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用，检测此窗口的键盘事件</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">key</td>
+                                    <td class="param-type">Keyboard::Key</td>
+                                    <td>要检测的键盘按键（如 Keyboard::A、Keyboard::Space 等）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- IsKeyUp 函数 -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">IsKeyUp</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 判断当前键盘的一个按键是否抬起。检测指定按键是否在当前帧被释放（抬起事件）。这个函数只在按键刚刚抬起时返回 true。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">IsKeyUp</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">RenderWindow& Dest</span>,
+                                <span class="param">string key = "NULL"</span>,
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用，检测此窗口的键盘事件</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">key</td>
+                                    <td class="param-type">string</td>
+                                    <td>虚拟键码字符串表示，如"A"、"Space"、"Escape"等，"NULL"表示任意键</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </section>
+
+            <!-- 高级输入处理函数 -->
+            <section style="margin-bottom: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-terminal"></i> 高级输入处理函数
+                </h2>
+                <div class="function-grid">
+
+                    <!-- GetPressKeyList -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">GetPressKeyList</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 获取当前按下的按键列表。返回一个包含当前所有被按下按键的向量（vector<Keyboard::Key>）。可以用于检测多个按键同时按下的情况。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static vector&lt;string&gt;</span>
+                            <span class="func-name">GetPressKeyList</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">int id = -1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">id</td>
+                                    <td class="param-type">int</td>
+                                    <td>消息ID，-1表示使用默认消息ID</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Keystate 函数 -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">Keystate</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 判断虚拟键码对应的按键是否被按下。通过Windows虚拟键码（VK）直接检测按键状态，不依赖窗口消息循环。适用于需要实时检测系统级按键状态的场景。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static bool</span>
+                            <span class="func-name">Keystate</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">int VK</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">VK</td>
+                                    <td class="param-type">int</td>
+                                    <td>Windows虚拟键码，如0x41表示'A'键</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 相关函数链接 -->
+            <section class="related-functions">
+                <h3><i class="fas fa-link"></i> 相关函数链接</h3>
+                <div class="related-links">
+                    <a href="messages-basic.html" class="related-link">底层函数模块</a>
+                    <a href="messages-mouse.html" class="related-link">鼠标消息模块</a>
+                    <a href="messages-composite.html" class="related-link">复合函数模块</a>
+                    <a href="messages.html" class="related-link">返回消息处理主页</a>
+                    <a href="window.html" class="related-link">窗口管理</a>
+                    <a href="graphics.html" class="related-link">图形绘制</a>
+                    <a href="index.html" class="related-link">返回首页</a>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+    <script>
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.top-nav-links a').forEach(link => {
+                if (link.getAttribute('href') === 'messages.html') {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图形绘制 API - Qx 文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+    <div class="container">
+
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航栏 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html" class="active"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                                            <span>图形绘制</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-paint-brush"></i> 图形绘制 API</h1>
+                <p class="subtitle">QGraph 类 - 基础图形绘制、图片操作和文字显示</p>
+            </div>
+
+            <!-- 类定义 -->
+            <section class="category-card">
+                <div class="class-header">
+                    <h2>QGraph 类</h2>
+                    <span class="class-badge">静态类</span>
+                </div>
+                <p class="class-description">
+                    QGraph 是一个功能丰富的图形绘制类，包含多个子类用于处理不同类型的图形操作。
+                    该类提供了从基础几何图形绘制到复杂图片处理和文字显示的全套功能。所有方法都是静态的，无需创建类实例即可使用。
+                    包含 Line、Circle、Rectangle 等子类用于绘制基本图形，QIMAGE 和 QIMAGEEX 用于图片操作，QTEXT 用于文字显示。
+                </p>
+            </section>
+
+            <!-- 功能分类 -->
+            <div class="category-grid">
+                <!-- 颜色与绘制图形 -->
+                <a href="graphics-basic.html" class="category-card">
+                    <div class="card-icon" style="background: #e74c3c;">
+                        <i class="fas fa-shapes"></i>
+                    </div>
+                    <h2><i class="fas fa-palette"></i> 颜色与基础图形</h2>
+                    <p>提供基础的图形绘制功能，包括线条、圆形、椭圆、矩形等基本几何图形的绘制。支持设置颜色、线宽、线型和填充效果。</p>
+                    <div class="btn">查看详细文档</div>
+                </a>
+
+                <!-- 图片操作 -->
+                <a href="graphics-image.html" class="category-card">
+                    <div class="card-icon" style="background: #2ecc71;">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <h2><i class="fas fa-photo-video"></i> 图片操作</h2>
+                    <p>提供完整的图片加载、处理、显示和变换功能。包括图片缩放、旋转、滤镜效果、裁剪和合成等高级图片操作。</p>
+                    <div class="btn">查看详细文档</div>
+                </a>
+
+                <!-- 文字显示 -->
+                <a href="graphics-text.html" class="category-card">
+                    <div class="card-icon" style="background: #f39c12;">
+                        <i class="fas fa-font"></i>
+                    </div>
+                    <h2><i class="fas fa-text-height"></i> 文字显示</h2>
+                    <p>提供文字绘制和字体控制功能。支持自定义字体、大小、颜色、对齐方式，以及多种文本布局和格式化选项。</p>
+                    <div class="btn">查看详细文档</div>
+                </a>
+            </div>
+
+            <!-- 快速导航 -->
+            <section class="quick-nav">
+                <h3><i class="fas fa-link"></i> 快速导航</h3>
+                <div class="nav-links-grid">
+                    <a href="graphics-basic.html" class="nav-link-item"><i class="fas fa-palette"></i> 颜色与基础图形</a>
+                    <a href="graphics-image.html" class="nav-link-item"><i class="fas fa-image"></i> 图片操作</a>
+                    <a href="graphics-text.html" class="nav-link-item"><i class="fas fa-font"></i> 文字显示</a>
+                    <a href="window.html" class="nav-link-item"><i class="fas fa-window-maximize"></i> 窗口管理</a>
+                    <a href="messages.html" class="nav-link-item"><i class="fas fa-comments"></i> 消息处理</a>
+                    <a href="index.html" class="nav-link-item"><i class="fas fa-home"></i> 返回首页</a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // 简单的交互效果
+        document.querySelectorAll('.category-card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = '';
+            });
+        });
+
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

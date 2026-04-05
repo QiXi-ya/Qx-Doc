@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>颜色与基础图形 - Qx 文档</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="background.js"></script>
+    <script src="script.js"></script>
+
+</head>
+<body>
+
+    <!-- 添加背景画布 -->
+    <div id="backgroundCanvasContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <canvas id="butterflyCanvas" style="display: block;"></canvas>
+    </div>
+
+    <div class="container">
+
+        <!-- 搜索栏容器 -->
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索 API 函数..."
+                       onkeyup="searchAPI(event)"
+                       onfocus="showSuggestions()"
+                       onblur="hideSuggestions()">
+                <button type="button" onclick="performSearch()" aria-label="搜索">
+                    <i class="fas fa-search"></i>
+                </button>
+                <div class="search-suggestions" id="searchSuggestions"></div>
+            </div>
+        </div>
+
+        <!-- 顶层导航栏 -->
+        <div class="header-nav">
+            <div class="nav-container">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <h1>Qx API 文档</h1>
+                </div>
+                <ul class="top-nav-links">
+                    <li><a href="index.html"><i class="fas fa-home"></i>首页</a></li>
+                    <li><a href="window.html"><i class="fas fa-window-maximize"></i>窗口管理</a></li>
+                    <li><a href="color.html"><i class="fas fa-palette"></i>颜色处理</a></li>
+                    <li><a href="graphics.html" class="active"><i class="fas fa-paint-brush"></i>图形绘制</a></li>
+                    <li><a href="messages.html"><i class="fas fa-comments"></i>消息处理</a></li>
+                    <li><a href="system.html"><i class="fas fa-cogs"></i>系统函数</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 面包屑导航 -->
+            <div class="breadcrumb">
+                <a href="index.html">首页</a> <i class="fas fa-chevron-right"></i>
+                <a href="graphics.html">图形绘制</a> <i class="fas fa-chevron-right"></i>
+                <span>颜色与基础图形</span>
+            </div>
+
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1><i class="fas fa-palette"></i> 颜色与基础图形</h1>
+                <p class="subtitle">QGraph 类 - 线条、圆形、矩形等基本图形绘制</p>
+            </div>
+
+            <!-- 枚举定义 -->
+            <section class="enum-section">
+                <h3><i class="fas fa-list"></i> 枚举类型</h3>
+                <table class="enum-table">
+                    <tr>
+                        <th>枚举名称</th>
+                        <th>枚举值</th>
+                        <th>描述</th>
+                    </tr>
+                    <tr>
+                        <td>LineType</td>
+                        <td class="enum-value">LINE_SOLID</td>
+                        <td>实线</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="enum-value">LINE_CENTER</td>
+                        <td>中心线（虚线）</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="enum-value">LINE_DOTTED</td>
+                        <td>点线</td>
+                    </tr>
+                    <tr>
+                        <td>LineCapType</td>
+                        <td class="enum-value">LINECAP_FLAT</td>
+                        <td>平头线帽</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="enum-value">LINECAP_ROUND</td>
+                        <td>圆头线帽（默认）</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="enum-value">LINECAP_SQUART</td>
+                        <td>方头线帽</td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- 全局函数 -->
+            <section>
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-globe"></i> 全局函数
+                </h2>
+                <div class="function-grid">
+                    <!-- setcolor -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">setcolor</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置当前绘制颜色。这个颜色会影响后续所有线条和图形边框的绘制，直到再次调用 setcolor 修改颜色。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">setcolor</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">Color color</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">color</td>
+                                    <td class="param-type">Color</td>
+                                    <td>要设置的颜色，通常为 RGBA 格式</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- setfillcolor -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">setfillcolor</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置当前填充颜色。这个颜色会影响后续所有填充图形的内部填充颜色，直到再次调用 setfillcolor 修改颜色。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">setfillcolor</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">Color color</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">color</td>
+                                    <td class="param-type">Color</td>
+                                    <td>要设置的填充颜色，通常为 RGBA 格式</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Line 子类 -->
+            <section style="margin-top: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-slash"></i> Line 类 - 线条绘制
+                </h2>
+                <div class="function-grid">
+                    <!-- line -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">line</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制一条直线。从点 (x1, y1) 到点 (x2, y2) 绘制一条直线，使用当前设置的线宽、线型和颜色。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">line</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x1</span>,
+                                <span class="param">float y1</span>,
+                                <span class="param">float x2</span>,
+                                <span class="param">float y2</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x1, y1</td>
+                                    <td class="param-type">float</td>
+                                    <td>起点坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x2, y2</td>
+                                    <td class="param-type">float</td>
+                                    <td>终点坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- lineEx -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">lineEx</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制具有自定义粗细和样式的直线。可以指定线宽、线型（实线、虚线、点线），比基础的 line 函数提供更多控制选项。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">lineEx</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float x2</span>,
+                                <span class="param">float y2</span>,
+                                <span class="param">int thickness</span>,
+                                <span class="param">LineType type</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>起点坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">x2, y2</td>
+                                    <td class="param-type">float</td>
+                                    <td>终点坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">thickness</td>
+                                    <td class="param-type">int</td>
+                                    <td>线条粗细（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">type</td>
+                                    <td class="param-type">LineType</td>
+                                    <td>线条类型（实线、虚线、点线）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- setlinewidth -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">setlinewidth</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置全局线条粗细。这个设置会影响后续所有线条绘制函数的线宽，直到再次调用此函数修改线宽。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">setlinewidth</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">int thickness = 1</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">thickness</td>
+                                    <td class="param-type">int</td>
+                                    <td>线条粗细，默认值为1像素</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- setlinetype -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">setlinetype</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置全局线条类型。可以设置为实线、虚线或点线，这个设置会影响后续所有线条绘制函数的线型。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">setlinetype</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">LineType type = LINE_SOLID</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">type</td>
+                                    <td class="param-type">LineType</td>
+                                    <td>线条类型，默认为实线</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- setlinecap -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">setlinecap</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 设置线条端点样式。可以设置为平头、圆头或方头，这个设置会影响线条两端的显示效果，特别是在线宽较大时效果更明显。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">setlinecap</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">LineCapType type = LINECAP_ROUND</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">type</td>
+                                    <td class="param-type">LineCapType</td>
+                                    <td>线帽类型，默认为圆头</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Circle 子类 -->
+            <section style="margin-top: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-circle"></i> Circle 类 - 圆形绘制
+                </h2>
+                <div class="function-grid">
+                    <!-- circle -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">circle</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制一个圆形边框。绘制指定中心和半径的圆形，只绘制边框，不填充内部。边框使用当前设置的颜色和线宽。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">circle</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float radius</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆心坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radius</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆的半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- fillcircle -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">fillcircle</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制一个填充的圆形，带有边框。圆形内部使用当前填充颜色填充，边框使用当前绘制颜色。这是最常用的圆形绘制函数。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">fillcircle</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float radius</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆心坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radius</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆的半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- fillcircle_withoutborder -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">fillcircle_withoutborder</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制一个填充的圆形，不绘制边框。圆形内部使用当前填充颜色填充，但没有边框。适用于需要纯色圆形的情况。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">fillcircle_withoutborder</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float radius</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆心坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radius</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆的半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ellipse -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">ellipse</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制一个椭圆边框。绘制指定中心、横向半径和纵向半径的椭圆，只绘制边框，不填充内部。适用于需要椭圆形状的图形。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">ellipse</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float radiusX</span>,
+                                <span class="param">float radiusY</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>椭圆中心坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radiusX</td>
+                                    <td class="param-type">float</td>
+                                    <td>横向半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radiusY</td>
+                                    <td class="param-type">float</td>
+                                    <td>纵向半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- fillellipse -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">fillellipse</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制一个填充的椭圆，带有边框。椭圆内部使用当前填充颜色填充，边框使用当前绘制颜色。可以控制椭圆的横向和纵向半径。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">fillellipse</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float radiusX</span>,
+                                <span class="param">float radiusY</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>椭圆中心坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radiusX</td>
+                                    <td class="param-type">float</td>
+                                    <td>横向半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radiusY</td>
+                                    <td class="param-type">float</td>
+                                    <td>纵向半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- fillellipse_withoutborder -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">fillellipse_withoutborder</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制一个填充的椭圆，不绘制边框。椭圆内部使用当前填充颜色填充，但没有边框。适用于需要纯色椭圆的情况。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">fillellipse_withoutborder</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float radiusX</span>,
+                                <span class="param">float radiusY</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>椭圆中心坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radiusX</td>
+                                    <td class="param-type">float</td>
+                                    <td>横向半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radiusY</td>
+                                    <td class="param-type">float</td>
+                                    <td>纵向半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- arc -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">arc</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制圆弧。绘制指定中心、半径、起始角度和绘制角度的圆弧。只绘制圆弧的边框，不填充。角度通常以度为单位。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">arc</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float radius</span>,
+                                <span class="param">float startAngle</span>,
+                                <span class="param">float endAngle</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆弧中心坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radius</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆弧半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">startAngle</td>
+                                    <td class="param-type">float</td>
+                                    <td>起始角度（度）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">endAngle</td>
+                                    <td class="param-type">float</td>
+                                    <td>绘制角度（度），从起始角度开始计算</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- fillarc -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">fillarc</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制填充的圆弧，不绘制边框。绘制指定参数的填充扇形区域，内部使用当前填充颜色填充，但没有边框。适用于绘制扇形图等场景。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">fillarc</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float radius</span>,
+                                <span class="param">float startAngle</span>,
+                                <span class="param">float endAngle</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆弧中心坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radius</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆弧半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">startAngle</td>
+                                    <td class="param-type">float</td>
+                                    <td>起始角度（度）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">endAngle</td>
+                                    <td class="param-type">float</td>
+                                    <td>绘制角度（度），从起始角度开始计算</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Rectangle 子类 -->
+            <section style="margin-top: 40px;">
+                <h2 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-square"></i> Rectangle 类 - 矩形绘制
+                </h2>
+                <div class="function-grid">
+                    <!-- rect -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">rect</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制矩形边框。绘制指定位置和大小的矩形，只绘制边框，不填充内部。边框使用当前设置的颜色和线宽。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">rect</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float w</span>,
+                                <span class="param">float h</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形左上角坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形宽度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">h</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形高度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- fillrect -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">fillrect</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制填充的矩形，带有边框。矩形内部使用当前填充颜色填充，边框使用当前绘制颜色。这是最常用的矩形绘制函数。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">fillrect</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float w</span>,
+                                <span class="param">float h</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形左上角坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形宽度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">h</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形高度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- fillrect_withoutborder -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">fillrect_withoutborder</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制填充的矩形，不绘制边框。矩形内部使用当前填充颜色填充，但没有边框。适用于需要纯色矩形的情况。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">fillrect_withoutborder</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float w</span>,
+                                <span class="param">float h</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形左上角坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形宽度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">h</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形高度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- roundrect -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">roundrect</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制圆角矩形边框。绘制指定位置、大小和圆角半径的圆角矩形，只绘制边框，不填充内部。边框使用当前设置的颜色和线宽。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">roundrect</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float w</span>,
+                                <span class="param">float h</span>,
+                                <span class="param">float radius</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形左上角坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形宽度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">h</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形高度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radius</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆角半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- fillroundrect -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">fillroundrect</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制填充的圆角矩形，带有边框。圆角矩形内部使用当前填充颜色填充，边框使用当前绘制颜色。适用于现代UI设计中的圆角元素。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">fillroundrect</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float w</span>,
+                                <span class="param">float h</span>,
+                                <span class="param">float radius</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形左上角坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形宽度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">h</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形高度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radius</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆角半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- fillroundrect_withoutborder -->
+                    <div class="function-card">
+                        <div class="function-header">
+                            <div class="function-name">fillroundrect_withoutborder</div>
+                            <span class="function-tag">静态</span>
+                        </div>
+                        <div class="function-introduction">
+                            <i class="fas fa-info-circle"></i> 绘制填充的圆角矩形，不绘制边框。圆角矩形内部使用当前填充颜色填充，但没有边框。适用于现代UI设计中的背景元素。
+                        </div>
+                        <div class="function-signature">
+                            <span class="return-type">static void</span>
+                            <span class="func-name">fillroundrect_withoutborder</span>
+                            <span class="param-list">
+                                (
+                                <span class="param">float x</span>,
+                                <span class="param">float y</span>,
+                                <span class="param">float w</span>,
+                                <span class="param">float h</span>,
+                                <span class="param">float radius</span>,
+                                <span class="param">RenderWindow& Dest</span>
+                                )
+                            </span>
+                        </div>
+                        <div class="params-section">
+                            <h4><i class="fas fa-list"></i> 参数</h4>
+                            <table class="params-table">
+                                <tr>
+                                    <td class="param-name">x, y</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形左上角坐标</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">w</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形宽度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">h</td>
+                                    <td class="param-type">float</td>
+                                    <td>矩形高度（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">radius</td>
+                                    <td class="param-type">float</td>
+                                    <td>圆角半径（像素）</td>
+                                </tr>
+                                <tr>
+                                    <td class="param-name">Dest</td>
+                                    <td class="param-type">RenderWindow&</td>
+                                    <td>目标窗口引用</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 相关函数链接 -->
+            <section class="related-functions">
+                <h3><i class="fas fa-link"></i> 相关函数链接</h3>
+                <div class="related-links">
+                    <a href="graphics-image.html" class="related-link">图片操作模块</a>
+                    <a href="graphics-text.html" class="related-link">文字显示模块</a>
+                    <a href="graphics.html" class="related-link">返回图形绘制主页</a>
+                    <a href="index.html" class="related-link">返回首页</a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // 简单的交互效果
+        document.querySelectorAll('.function-card').forEach(card => {
+            card.addEventListener('click', function () {
+                this.style.transform = 'translateY(-5px)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 300);
+            });
+        });
+
+        // 当前页面高亮
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname.split('/').pop();
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === 'graphics.html') {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
